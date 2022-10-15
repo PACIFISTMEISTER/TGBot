@@ -5,11 +5,13 @@ import json
 
 from database import CheckLastUpdate, UpdateTime
 import os
+
 token = os.getenv('VK_TOKEN')
 
-def ParsePublic(user_id, Publics:list,type):
+
+def ParsePublic(user_id, Publics: list, type):
     """парсинг пабликов"""
-    lastSeen = CheckLastUpdate(user_id,type)
+    lastSeen = CheckLastUpdate(user_id, type)
     unix = 1
     if lastSeen is not None:
         unix = time.mktime(lastSeen.timetuple())
@@ -18,10 +20,8 @@ def ParsePublic(user_id, Publics:list,type):
     except:
         print('too many requests')
     urls = []
-    for public in Publics:
-
-        posts = json.loads(json.dumps(api.wall.get(access_token=token, domain=public, count=10)))
-
+    for Public in Publics:
+        posts = json.loads(json.dumps(api.wall.get(access_token=token, domain='saintbeobanka', count=2),indent=4))
         for post in posts['items']:
             if unix and post['date'] > unix:
                 for attachment in post['attachments']:
@@ -30,6 +30,6 @@ def ParsePublic(user_id, Publics:list,type):
 
             else:
                 break
-    UpdateTime(user_id,type)
+    UpdateTime(user_id, type)
 
     return urls
